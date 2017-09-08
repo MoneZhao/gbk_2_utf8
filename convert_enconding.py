@@ -1,8 +1,10 @@
 # encoding = utf-8
 import os
+import sys
 
 end_with = ".txt"
-convert_result_dir = "转换结果"
+convert_source_dir = "source"
+convert_result_dir = "result"
 
 
 def resolve_dir(path, source_path, target_path):
@@ -30,7 +32,7 @@ def resolve_file(path, source_path, target_path):
         if not os.path.exists(target_path) and target_path != "":
             os.makedirs(target_path)
         try:
-            txt_file = open(path, "r")
+            txt_file = open(path, "r", encoding="gbk")
             new_file = open(target_path + os.sep +
                             new_path, "w", encoding="utf-8")
             for line in txt_file:
@@ -47,8 +49,12 @@ def resolve_file(path, source_path, target_path):
 
 
 if __name__ == '__main__':
-    source_path = os.path.abspath('.')
-    target_path = source_path + os.sep + convert_result_dir
-    print("转换目录: " + source_path)
-    resolve_dir(source_path, source_path, target_path)
-    print("转换完成")
+    source_path = os.path.abspath('.') + os.sep + convert_source_dir
+    if os.path.exists(source_path):
+        target_path = source_path + os.sep + convert_result_dir
+        print("转换目录: " + source_path)
+        resolve_dir(source_path, source_path, target_path)
+        print("转换完成")
+    else:
+        os.makedirs(source_path)
+        print("转换完成")
