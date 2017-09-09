@@ -31,30 +31,21 @@ def resolve_file(path, source_path, target_path):
     if path.endswith(end_with):
         if not os.path.exists(target_path) and target_path != "":
             os.makedirs(target_path)
-        try:
-            txt_file = open(path, "r", encoding="gbk")
-            new_file = open(target_path + os.sep +
-                            new_path, "w", encoding="utf-8")
-            for line in txt_file:
-                new_file.write(line)
-        except UnicodeDecodeError:
-            txt_file = open(path, "r", encoding="utf-8")
-            new_file = open(target_path + os.sep +
-                            new_path, "w", encoding="utf-8")
-            for line in txt_file:
-                new_file.write(line)
-        txt_file.close()
-        new_file.close()
-        print("转换文件: " + target_path + os.sep + new_path + " 完成")
+
+        with open(path, "r", encoding="gbk") as txt_file, open(target_path + os.sep + new_path, "w", encoding="utf-8") as new_file:
+            try:
+                new_file.write(txt_file.read())
+                print("转换文件: " + target_path + os.sep + new_path + " 完成")
+            except UnicodeDecodeError as e:
+                print('转换', new_path, '失败：', e)
 
 
 if __name__ == '__main__':
     source_path = os.path.abspath('.') + os.sep + convert_source_dir
     if os.path.exists(source_path):
-        target_path = source_path + os.sep + convert_result_dir
-        print("转换目录: " + source_path)
+        target_path = os.path.abspath('.') + os.sep + convert_result_dir
         resolve_dir(source_path, source_path, target_path)
-        print("转换完成")
+        print("转换结束")
     else:
         os.makedirs(source_path)
-        print("转换完成")
+        print("转换结束")
